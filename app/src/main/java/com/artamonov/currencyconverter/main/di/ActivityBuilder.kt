@@ -9,5 +9,4 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = [(RateActivityModule::class)])
     abstract fun bindRateActivity(): RatesActivity
-
 }

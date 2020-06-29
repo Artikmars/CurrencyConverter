@@ -10,5 +10,4 @@ interface RatesPresenter <V : RatesView, I : RatesInteractor> : Presenter<V, I> 
     fun getCurrencyList(baseCurrency: String?)
 
     fun onAttach(view: View)
-
 }

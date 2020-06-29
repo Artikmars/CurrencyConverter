@@ -28,7 +28,6 @@ class MyApplication : Application(), HasAndroidInjector {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
         }
-
     }
 
     override fun androidInjector() = dispatchingAndroidInjector

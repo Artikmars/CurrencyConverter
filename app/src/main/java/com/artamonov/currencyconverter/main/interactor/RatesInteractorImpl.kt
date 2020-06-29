@@ -6,7 +6,8 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class RatesInteractorImpl @Inject
-constructor(private val apiHelper: ApiHelper
+constructor(
+    private val apiHelper: ApiHelper
 ) : RatesInteractor {
 
     override fun getCurrencyList(baseCurrency: String): Single<CurrencyRateJson> {

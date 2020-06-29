@@ -14,6 +14,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "com.diffplug.gradle.spotless" version "4.2.1"
+}
+
 allprojects {
     repositories {
         google()
@@ -21,6 +25,29 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+apply plugin: 'java'
+apply plugin: 'groovy'
+spotless {
+    format("misc") {
+        target("**/*.gradle", "**/*.md", "**/.gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    freshmark {
+        target("**/*.md")
+        propertiesFile("gradle.properties")
+    }
+    java {
+        target("**/*.java")
+        removeUnusedImports()
+        googleJavaFormat().aosp()
+    }
+    kotlin {
+        target("*/src/**/*.kt")
+        ktlint("0.29.0")
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("0.29.0")
+    }
 }

@@ -62,6 +62,5 @@ class NetworkModule {
         }
 
         return okHttpClientBuilder.build()
-
     }
 }

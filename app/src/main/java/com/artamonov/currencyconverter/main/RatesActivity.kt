@@ -17,9 +17,6 @@ class RatesActivity : BaseActivity(), RatesView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter.onAttach(this)
-
-        Thread.sleep(5000)
-
         presenter.getCurrencyList("CNY")
     }
 

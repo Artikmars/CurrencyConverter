@@ -3,7 +3,7 @@ package com.artamonov.currencyconverter.main.base
 import com.artamonov.currencyconverter.main.utils.SchedulerProvider
 import io.reactivex.disposables.CompositeDisposable
 
-open class BasePresenter<V : BaseView, I : Interactor> internal constructor(protected var interactor: I?, protected val schedulerProvider: SchedulerProvider, protected val compositeDisposable: CompositeDisposable): Presenter <V,I> {
+open class BasePresenter<V : BaseView, I : Interactor> internal constructor(protected var interactor: I?, protected val schedulerProvider: SchedulerProvider, protected val compositeDisposable: CompositeDisposable) : Presenter <V, I> {
 
     private var view: V? = null
 
@@ -16,8 +16,4 @@ open class BasePresenter<V : BaseView, I : Interactor> internal constructor(prot
     }
 
     override fun getView(): V? = view
-
-    companion object {
-        const val TAG = "BasePresenter"
-    }
 }

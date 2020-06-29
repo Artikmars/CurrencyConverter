@@ -23,6 +23,4 @@ class RateActivityModule {
     @Provides
     internal fun provideRatesPresenter(presenter: RatesPresenterImpl<RatesView, RatesInteractor>):
             RatesPresenter<RatesView, RatesInteractor> = presenter
-
 }
-
