@@ -1,7 +1,7 @@
 package com.artamonov.currencyconverter.main.networking.models
 
 class CurrencyRateJson {
-    val baseCurrency: AnnotationCurrencyType? = null
+    val baseCurrency: String? = null
     val rates: Rates? = null
 }
 

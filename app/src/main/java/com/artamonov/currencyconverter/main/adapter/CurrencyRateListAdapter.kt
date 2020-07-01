@@ -5,10 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.artamonov.currencyconverter.R
-import com.artamonov.currencyconverter.main.networking.models.CurrencyRate
+import com.artamonov.currencyconverter.main.networking.models.Rate
+import kotlinx.android.synthetic.main.currency_rate_item.view.*
 
 class CurrencyRateListAdapter(
-    private val mDataSource: AdapterDataSource<CurrencyRate>,
+    private val mDataSource: AdapterDataSource<Rate>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<CurrencyRateListAdapter.ViewHolder>() {
 
@@ -35,10 +36,14 @@ class CurrencyRateListAdapter(
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         private var view: View = v
-        private var contactItem: CurrencyRate? = null
+        private var contactItem: Rate? = null
 
-        fun bindItem(item: CurrencyRate?) {
+        fun bindItem(item: Rate?) {
             this.contactItem = item
+
+            view.currency_code.text = contactItem?.currencyCode
+            view.currency_long_name?.text = contactItem?.currencyLongName
+            view.currency_rate_edit?.setText(contactItem?.rate.toString())
         }
     }
 }
