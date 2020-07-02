@@ -1,6 +1,8 @@
 package com.artamonov.currencyconverter.main
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
@@ -16,8 +18,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 class RatesActivity : BaseActivity(), RatesView {
-
     private var adapter: CurrencyRateListAdapter? = null
+    private var handler: Handler? = null
 
     @Inject
     internal lateinit var presenter: RatesPresenter<RatesView, RatesInteractor >
@@ -26,8 +28,28 @@ class RatesActivity : BaseActivity(), RatesView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter.onAttach(this)
-        presenter.getCurrencyList(null)
+        handler = Handler(Looper.getMainLooper())
         initAdapter()
+        swipe_refresh.setOnRefreshListener {
+            presenter.getCurrencyList(null)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handler?.post(getCurrencies)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        handler?.removeCallbacks(getCurrencies)
+    }
+
+    private val getCurrencies = object : Runnable {
+        override fun run() {
+            presenter.getCurrencyList(null)
+            handler?.postDelayed(this, 1000)
+        }
     }
 
     override fun scrollToTop() {
@@ -36,10 +58,11 @@ class RatesActivity : BaseActivity(), RatesView {
 
     override fun updateList(itemCount: Int) {
         adapter?.notifyItemRangeChanged(1, itemCount)
+        hideProgress()
     }
 
     override fun moveBaseItem(positionRemoved: Int) {
-        adapter?.notifyItemMoved(positionRemoved, 0)
+        currency_list.post { adapter?.notifyItemMoved(positionRemoved, 0) }
     }
 
     private fun initAdapter() {
@@ -71,9 +94,7 @@ class RatesActivity : BaseActivity(), RatesView {
         })
     }
 
-    override fun showProgress() {
-    }
-
     override fun hideProgress() {
+        swipe_refresh.isRefreshing = false
     }
 }

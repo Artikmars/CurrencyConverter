@@ -1,6 +1,7 @@
 package com.artamonov.currencyconverter.main.networking.models
 
 import androidx.annotation.StringDef
+import com.artamonov.currencyconverter.R
 
 object AnnotationCurrencyType {
     const val AUD = "AUD"
@@ -11,7 +12,7 @@ object AnnotationCurrencyType {
     const val CZK = "CZK"
     const val DKK = "DKK"
     const val EUR = "EUR"
-    const val GBR = "GBR"
+    const val GBP = "GBP"
     const val HKD = "HKD"
     const val HRK = "HRK"
     const val HUF = "HUF"
@@ -40,7 +41,7 @@ object AnnotationCurrencyType {
             Rate(currencyCode = BGN, rate = rates?.BGN), Rate(currencyCode = BRL, rate = rates?.BRL),
             Rate(currencyCode = CAD, rate = rates?.CAD), Rate(currencyCode = CHF, rate = rates?.CHF),
             Rate(currencyCode = CZK, rate = rates?.CZK), Rate(currencyCode = DKK, rate = rates?.DKK),
-            Rate(currencyCode = EUR, rate = rates?.EUR), Rate(currencyCode = GBR, rate = rates?.GBP),
+            Rate(currencyCode = EUR, rate = rates?.EUR), Rate(currencyCode = GBP, rate = rates?.GBP),
             Rate(currencyCode = HKD, rate = rates?.HKD), Rate(currencyCode = HRK, rate = rates?.HRK),
             Rate(currencyCode = HUF, rate = rates?.HUF), Rate(currencyCode = IDR, rate = rates?.IDR),
             Rate(currencyCode = ILS, rate = rates?.ILS), Rate(currencyCode = INR, rate = rates?.INR),
@@ -54,8 +55,47 @@ object AnnotationCurrencyType {
             Rate(currencyCode = USD, rate = rates?.USD), Rate(currencyCode = ZAR, rate = rates?.ZAR))
     }
 
+    fun setIcons(rates: List<Rate>): MutableList<Rate> {
+        rates.forEach {
+            when (it.currencyCode) {
+                AUD -> it.iconResourceId = R.drawable.au
+                BGN -> it.iconResourceId = R.drawable.bg
+                BRL -> it.iconResourceId = R.drawable.br
+                CAD -> it.iconResourceId = R.drawable.ca
+                CHF -> it.iconResourceId = R.drawable.sw
+                CZK -> it.iconResourceId = R.drawable.cz
+                DKK -> it.iconResourceId = R.drawable.dk
+                EUR -> it.iconResourceId = R.drawable.eu
+                GBP -> it.iconResourceId = R.drawable.gb
+                HKD -> it.iconResourceId = R.drawable.hk
+                HRK -> it.iconResourceId = R.drawable.cr
+                HUF -> it.iconResourceId = R.drawable.hu
+                IDR -> it.iconResourceId = R.drawable.id
+                ILS -> it.iconResourceId = R.drawable.il
+                INR -> it.iconResourceId = R.drawable.id
+                ISK -> it.iconResourceId = R.drawable.`is`
+                JPY -> it.iconResourceId = R.drawable.jp
+                KRW -> it.iconResourceId = R.drawable.kr
+                MXN -> it.iconResourceId = R.drawable.mx
+                MYR -> it.iconResourceId = R.drawable.my
+                NOK -> it.iconResourceId = R.drawable.no
+                NZD -> it.iconResourceId = R.drawable.nz
+                PHP -> it.iconResourceId = R.drawable.ph
+                PLN -> it.iconResourceId = R.drawable.pl
+                RON -> it.iconResourceId = R.drawable.ro
+                RUB -> it.iconResourceId = R.drawable.ru
+                SEK -> it.iconResourceId = R.drawable.se
+                SGD -> it.iconResourceId = R.drawable.sg
+                THB -> it.iconResourceId = R.drawable.th
+                USD -> it.iconResourceId = R.drawable.us
+                ZAR -> it.iconResourceId = R.drawable.sa
+            }
+        }
+        return rates.toMutableList()
+    }
+
     @StringDef(
-        AUD, BGN, BRL, CAD, CHF, CZK, DKK, EUR, GBR, HKD, HRK, HUF, IDR, ILS, INR, ISK, JPY, KRW, MXN, MYR, NOK,
+        AUD, BGN, BRL, CAD, CHF, CZK, DKK, EUR, GBP, HKD, HRK, HUF, IDR, ILS, INR, ISK, JPY, KRW, MXN, MYR, NOK,
         NZD, PHP, PLN, RON, RUB, SEK, SGD, THB, USD, ZAR
     )
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)

@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.artamonov.currencyconverter.R
 import com.artamonov.currencyconverter.main.networking.models.Rate
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.currency_rate_item.view.*
 import java.util.ArrayList
 
@@ -63,6 +65,10 @@ class CurrencyRateListAdapter(
             view.currency_long_name?.text = currencyItem?.currencyLongName
             view.currency_rate_edit?.setText(currencyItem?.rate.toString())
 
+            Glide.with(view.context).load(currencyItem?.iconResourceId)
+                .apply(RequestOptions.circleCropTransform())
+                .into(view.currency_icon)
+
             view.currency_rate_edit.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                         if (view.currency_rate_edit.hasFocus()) {
@@ -79,10 +85,6 @@ class CurrencyRateListAdapter(
 
             view.currency_rate_edit.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) listener.onItemClick(currencyItem!!, currencyItem?.rate.toString(), adapterPosition)
-            }
-
-            view.setOnClickListener {
-                    listener.onItemClick(currencyItem!!, null, adapterPosition)
             }
         }
         }

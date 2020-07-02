@@ -8,6 +8,7 @@
 
     <ImageView
         android:id="@+id/currency_icon"
+        android:contentDescription="@string/currency_logo_content_description"
         android:layout_width="54dp"
         android:layout_height="36dp"
         android:layout_marginTop="20dp"
@@ -66,7 +67,7 @@
             android:layout_marginTop="15dp"
             android:background="@color/colorWhite"
             android:inputType="number"
-            android:text="100"
+            android:text="@string/base_currency_default_value"
             android:maxLines="1"
             android:paddingStart="12dp"
             android:paddingTop="5dp"

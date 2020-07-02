@@ -15,6 +15,6 @@ class RatesMapperImpl @Inject internal constructor() : RatesMapper {
             resultedRateList.add(Rate(currencyCode = currency.currencyCode, currencyLongName =
             Currency.getInstance(currency.currencyCode).displayName, rate = currency.rate))
         }
-        return resultedRateList
+        return AnnotationCurrencyType.setIcons(resultedRateList)
     }
 }

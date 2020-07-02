@@ -1,6 +1,5 @@
 package com.artamonov.currencyconverter.main.presenter
 
-import android.view.View
 import com.artamonov.currencyconverter.main.base.BasePresenter
 import com.artamonov.currencyconverter.main.interactor.RatesInteractor
 import com.artamonov.currencyconverter.main.mapper.RatesMapper
@@ -8,9 +7,9 @@ import com.artamonov.currencyconverter.main.networking.models.AnnotationCurrency
 import com.artamonov.currencyconverter.main.networking.models.Rate
 import com.artamonov.currencyconverter.main.utils.SchedulerProvider
 import com.artamonov.currencyconverter.main.view.RatesView
-import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
-import java.util.concurrent.TimeUnit
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 class RatesPresenterImpl<V : RatesView, I : RatesInteractor> @Inject internal
@@ -31,7 +30,6 @@ constructor(
 
     override fun getCurrencyList(baseCurrency: String?) {
             compositeDisposable.add(interactor!!.getCurrencyList(baseCurrency ?: this.baseCurrency)
-                .repeatWhen { Flowable.timer(1, TimeUnit.SECONDS).repeat() }
                 .map(ratesMapper::map)
                 .subscribeOn(schedulerProvider.getIOThreadScheduler())
                 .observeOn(schedulerProvider.getMainThreadScheduler())
@@ -47,9 +45,6 @@ constructor(
                 )
         }
 
-    override fun onAttach(view: View) {
-    }
-
     private fun moveBaseCurrencyToTheTop(rates: MutableList<Rate>): MutableList<Rate> {
         val currency = rates.find { it.currencyCode == baseCurrency }
         currency?.rate = baseCurrencyValue
@@ -64,7 +59,8 @@ constructor(
     private fun applyCurrencyIndex() {
         currencyRates
             .filterNot { it.currencyCode == baseCurrency }
-            .forEach { it.rate = it.rate!! * baseCurrencyValue }
+            .forEach { it.rate = BigDecimal(it.rate!! * baseCurrencyValue)
+                .setScale(2, RoundingMode.HALF_EVEN).toDouble() }
     }
 
     override fun getCurrency(position: Int): Rate {
@@ -78,7 +74,11 @@ constructor(
     override fun rateChanged(currency: Rate, rateValue: String?, position: Int) {
         baseCurrency = currency.currencyCode
         rateValue?.let {
-            if (rateValue.isNotEmpty()) { baseCurrencyValue = rateValue.toDouble() }
+            baseCurrencyValue = if (rateValue.isNotEmpty() && rateValue != ".") {
+                rateValue.toDouble()
+            } else {
+                0.0
+            }
             moveBaseCurrencyToTheTop(currencyRates)
         }
         getView()?.moveBaseItem(position)
