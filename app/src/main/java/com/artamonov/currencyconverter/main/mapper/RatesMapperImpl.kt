@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class RatesMapperImpl @Inject internal constructor() : RatesMapper {
 
-    override fun map(rateItemsJson: CurrencyRateJson?): MutableList<Rate>? {
+    override fun map(rateItemsJson: CurrencyRateJson?): MutableList<Rate> {
         val resultedRateList = mutableListOf<Rate>()
         val currencyList = AnnotationCurrencyType.getCurrencyList(rateItemsJson?.rates)
         for (currency in currencyList) {

@@ -68,12 +68,11 @@ class RatesActivity : BaseActivity(), RatesView {
     private fun initAdapter() {
         adapter = CurrencyRateListAdapter(
             object : AdapterDataSource<Rate> {
-                override fun getCount(): Int {
-                    return presenter.getCurrencyCount()
-                }
                 override fun get(position: Int): Rate {
                     return presenter.getCurrency(position)
                 }
+                override val count: Int
+                    get() = presenter.getCurrencyCount()
             }, object : CurrencyRateListAdapter.OnItemClickListener {
                 override fun onItemClick(currency: Rate, rateValue: String?, position: Int) {
                     presenter.rateChanged(currency, rateValue, position)
