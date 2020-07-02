@@ -15,4 +15,6 @@ interface RatesPresenter <V : RatesView, I : RatesInteractor> : Presenter<V, I> 
     fun getCurrencyCount(): Int
 
     fun onAttach(view: View)
+
+    fun rateChanged(currency: Rate, rateValue: String?, position: Int)
 }
