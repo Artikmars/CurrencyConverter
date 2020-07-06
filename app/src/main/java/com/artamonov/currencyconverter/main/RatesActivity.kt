@@ -3,6 +3,8 @@ package com.artamonov.currencyconverter.main
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
@@ -10,11 +12,11 @@ import com.artamonov.currencyconverter.R
 import com.artamonov.currencyconverter.main.adapter.AdapterDataSource
 import com.artamonov.currencyconverter.main.adapter.CurrencyRateListAdapter
 import com.artamonov.currencyconverter.main.base.BaseActivity
-import com.artamonov.currencyconverter.main.interactor.RatesInteractor
 import com.artamonov.currencyconverter.main.networking.models.Rate
-import com.artamonov.currencyconverter.main.presenter.RatesPresenter
+import com.artamonov.currencyconverter.main.presenter.RatesViewModel
 import com.artamonov.currencyconverter.main.view.RatesView
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.swipe_refresh
+import kotlinx.android.synthetic.main.activity_main.currency_list
 import javax.inject.Inject
 
 class RatesActivity : BaseActivity(), RatesView {
@@ -22,18 +24,32 @@ class RatesActivity : BaseActivity(), RatesView {
     private var handler: Handler? = null
 
     @Inject
-    internal lateinit var presenter: RatesPresenter<RatesView, RatesInteractor >
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+    lateinit var ratesViewModel: RatesViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        presenter.onAttach(this)
+        ratesViewModel = ViewModelProvider(this, viewModelFactory)[RatesViewModel::class.java]
+
         handler = Handler(Looper.getMainLooper())
         initAdapter()
         swipe_refresh.setOnRefreshListener {
-            presenter.getCurrencyList(null)
+            getCurrencyList()
         }
+
+        getCurrencyList()
+
+        ratesViewModel.user.observe(this, Observer { rateList ->
+            updateList(rateList.size)
+        })
+
+        ratesViewModel.moveBaseItem.observe(this, Observer { position ->
+            moveBaseItem(position)
+        })
     }
+
+    private fun getCurrencyList() { ratesViewModel.getCurrencyList(null) }
 
     override fun onResume() {
         super.onResume()
@@ -47,7 +63,7 @@ class RatesActivity : BaseActivity(), RatesView {
 
     private val getCurrencies = object : Runnable {
         override fun run() {
-            presenter.getCurrencyList(null)
+            getCurrencyList()
             handler?.postDelayed(this, 1000)
         }
     }
@@ -69,13 +85,13 @@ class RatesActivity : BaseActivity(), RatesView {
         adapter = CurrencyRateListAdapter(
             object : AdapterDataSource<Rate> {
                 override fun get(position: Int): Rate {
-                    return presenter.getCurrency(position)
+                    return ratesViewModel.getCurrency(position)
                 }
                 override val count: Int
-                    get() = presenter.getCurrencyCount()
+                    get() = ratesViewModel.getCurrencyCount()
             }, object : CurrencyRateListAdapter.OnItemClickListener {
                 override fun onItemClick(currency: Rate, rateValue: String?, position: Int) {
-                    presenter.rateChanged(currency, rateValue, position)
+                    ratesViewModel.rateChanged(currency, rateValue, position)
                 }
             })
 
